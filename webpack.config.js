@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
   entry: './client/index.js',
@@ -11,7 +12,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.jsx?/,
+        test: /jsx?$/,
         use: {
           loader: 'babel-loader',
           options: {
@@ -32,7 +33,11 @@ module.exports = {
   },
   plugins: [new HtmlWebpackPlugin({
     template: 'index.html'
-  })],
+  }),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+    }),
+  ],
   devServer: {
     static: {
       directory: path.join(__dirname, 'public'),
@@ -42,5 +47,8 @@ module.exports = {
     proxy: {
       '/api': 'http://localhost:3000',
     }
+  },
+  resolve: {
+    extensions: ['.js', '.jsx'],
   }
 }
